@@ -85,7 +85,13 @@
       "channel": "thesis-portal-channel",
       "directory": "./components/thesis-portal-chaincode",
       "initRequired": false,
-      "endorsement": "OR('UniAMSP.member','UniBMSP.member')"
+      "endorsement": "OR('UniAMSP.member','UniBMSP.member')",
+      "privateData": [
+        {
+          "orgNames": ["UniA", "UniB"],
+          "name": "UniABSecrectCollection"
+        }
+      ]
     }
   ]
 }
