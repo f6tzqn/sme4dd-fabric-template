@@ -1,0 +1,13 @@
+{
+  "network-configs": {
+    "network-unia": {
+      "name": "Network of UniA",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-unia.json"
+    },
+    "network-unib": {
+      "name": "Network of UniB",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-unib.json"
+    }
+  },
+  "license": "Apache-2.0"
+}

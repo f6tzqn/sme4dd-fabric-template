@@ -1,0 +1,199 @@
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+################################################################################
+#   CHANNEL Defaults
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#   Section: Organizations
+################################################################################
+Organizations:
+    - &UniGov
+      Name: UniGovMSP
+      ID: UniGovMSP
+      MSPDir: crypto-config/peerOrganizations/unigov.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('UniGovMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('UniGovMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('UniGovMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('UniGovMSP.member')"
+
+      AnchorPeers:
+
+    - &UniA
+      Name: UniAMSP
+      ID: UniAMSP
+      MSPDir: crypto-config/peerOrganizations/unia.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('UniAMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('UniAMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('UniAMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('UniAMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.unia.com
+            Port: 7041
+
+    - &UniB
+      Name: UniBMSP
+      ID: UniBMSP
+      MSPDir: crypto-config/peerOrganizations/unib.com/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('UniBMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('UniBMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('UniBMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('UniBMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.unib.com
+            Port: 7061
+
+################################################################################
+#   SECTION: Application
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Application policies, their canonical path is
+    #   /Channel/Application/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+################################################################################
+#   SECTION: Orderer
+################################################################################
+Orderer: &ThesisportalDefaults
+    OrdererType: solo
+    Addresses:
+        - orderer0.thesisportal.unigov.com:7030
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+
+################################################################################
+#   Profile
+################################################################################
+# https://github:com/hyperledger/fabric/blob/master/sampleconfig/configtx.yaml
+
+Profiles:
+    # Profile used to create Genesis block for group thesisportal #
+    ThesisportalGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *ThesisportalDefaults
+            Organizations:
+                - *UniGov
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *UniGov
+                    - *UniA
+                    - *UniB
+
+    # Profile used to create channeltx for thesis-portal-channel #
+    ThesisPortalChannel:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *ThesisportalDefaults
+            Organizations:
+                - *UniGov
+            Capabilities:
+                <<: *ApplicationCapabilities
+        Consortium: SampleConsortium
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *UniA
+                    - *UniB
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *UniA
+                - *UniB

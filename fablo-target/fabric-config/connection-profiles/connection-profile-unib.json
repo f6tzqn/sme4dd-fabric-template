@@ -1,0 +1,37 @@
+{
+  "name": "fablo-test-network-unib",
+  "description": "Connection profile for UniB in Fablo network",
+  "version": "1.0.0",
+  "client": {
+    "organization": "UniB"
+  },
+  "organizations": {
+    "UniB": {
+      "mspid": "UniBMSP",
+      "peers": [
+        "peer0.unia.com",
+        "peer0.unib.com"
+      ],
+      "certificateAuthorities": [
+        "ca.unib.com"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.unia.com": {
+      "url": "grpc://localhost:7041"
+    },
+    "peer0.unib.com": {
+      "url": "grpc://localhost:7061"
+    }
+  },
+  "certificateAuthorities": {
+    "ca.unib.com": {
+      "url": "http://localhost:7060",
+      "caName": "ca.unib.com",
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

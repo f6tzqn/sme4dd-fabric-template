@@ -1,0 +1,9 @@
+{
+  "network-configs": {
+    "network-unib": {
+      "name": "Network of UniB",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-unib.json"
+    }
+  },
+  "license": "Apache-2.0"
+}

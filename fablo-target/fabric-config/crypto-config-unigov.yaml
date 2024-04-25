@@ -1,0 +1,9 @@
+PeerOrgs:
+  - Name: UniGov
+    Domain: unigov.com
+    Specs:
+      - Hostname: orderer0.thesisportal
+    Template:
+      Count: 0
+    Users:
+      Count: 1

@@ -1,0 +1,24 @@
+name: fablo-test-network-unigov
+description: Connection profile for UniGov in Fablo network
+version: 1.0.0
+client:
+  organization: UniGov
+organizations:
+  UniGov:
+    mspid: UniGovMSP
+    peers:
+      - peer0.unia.com
+      - peer0.unib.com
+    certificateAuthorities:
+      - ca.unigov.com
+peers:
+  peer0.unia.com:
+    url: grpc://localhost:7041
+  peer0.unib.com:
+    url: grpc://localhost:7061
+certificateAuthorities:
+  ca.unigov.com:
+    url: http://localhost:7020
+    caName: ca.unigov.com
+    httpOptions:
+      verify: false
