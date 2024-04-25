@@ -128,11 +128,11 @@ Orderer: &ThesisportalDefaults
     OrdererType: solo
     Addresses:
         - orderer0.thesisportal.unigov.com:7030
-    BatchTimeout: 2s
+    BatchTimeout: 500ms
     BatchSize:
         MaxMessageCount: 10
         AbsoluteMaxBytes: 99 MB
-        PreferredMaxBytes: 512 KB
+        PreferredMaxBytes: 600 KB
     Organizations:
     # Policies defines the set of policies at this level of the config tree
     # For Orderer policies, their canonical path is
